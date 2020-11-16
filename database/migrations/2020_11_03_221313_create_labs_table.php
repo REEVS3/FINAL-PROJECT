@@ -14,7 +14,7 @@ class CreateLabsTable extends Migration
     public function up()
     {
         Schema::create('labs', function (Blueprint $table) {
-            $table->bigIncrements('id');
+            $table->id();
             $table->string('lab_name');
         });
     }

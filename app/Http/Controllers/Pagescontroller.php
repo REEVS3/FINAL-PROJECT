@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Student;
 use App\Lab;
+use App\lab_student_mark;
 use App\lab_student;
 
 class Pagescontroller extends Controller
@@ -20,23 +21,50 @@ class Pagescontroller extends Controller
 
 
     public function senddata(){
-
-
+        
         $formData = request()->all();
+      
 
         $Student = $formData['student'];
         $lab = $formData['Lab'];
         $password = $formData['password'];
-
-
+;
 
         if ($password== $lab*100)
         {
-            return view('pages.Questions',compact('Student','lab'));
-        }
+
+            $alreadymarked=lab_student_mark::where([
+                ['student_id', $Student],
+                ['lab_id', $lab]
+            ])->get();
+         
+           
+           if (count($alreadymarked)==0) {
+                $mark = new lab_student_mark;
+                $mark->student_id=$Student;
+                $mark->lab_id=$lab;
+                $mark->save();
+               
+                return view('pages.Questions',compact('Student','lab'));
+           }
+                else
+                {
+                
+                  return redirect('/')->with('alert','Already Marked');
+                }
+        
+                
+        
+              
+       
+            }
+
+              
+            
+        
         else
         {
-          return redirect('/');
+          return redirect('/')->with('alert','Lab Password Wrong');
         }
 
 
@@ -58,10 +86,6 @@ class Pagescontroller extends Controller
 
 
 
-
-
-
-
     public function completedlabs(){
 
         $studentid = 22;
@@ -71,6 +95,62 @@ class Pagescontroller extends Controller
         return view('pages.completed',compact('Labs','data'));
     }
 
+    public function tables(){
+        $Labs = Lab::all();
+        $Student = Student::all();
+        $Pivot = lab_student::all();
+
+        return view('pages.tables',compact('Labs','Student','Pivot'));
+        
+
+
+
+    }
+
+
+
+    public function studentslabs(){
+
+
+
+        $display=[];
+    
+        $Labs = Lab::all();
+        $Students = Student::all();
+
+ 
+        
+        foreach ($Students as $i => $student)  {
+
+            foreach ( $Labs as $lab) {
+
+                $marks = lab_student_mark::where([
+                    ['lab_id', $lab->id],
+                    ['student_id',$student->id]
+                ])->get();
+               
+    
+                if ( count($marks) !=0 ) {
+                    
+                    $display[$i][]="Done";
+                    
+                }
+                else {
+                    $display[$i][]="*";
+                }
+            }
+        }
+
+        return view('pages.completed',compact('Labs','Students','display'));
+        
+        
+    }
+
+
+        
+
+    
+    
 
 
     public function sendquestions(){
@@ -84,7 +164,6 @@ class Pagescontroller extends Controller
         $student_id = $formData['student'];
         $lab_id = $formData['lab'];
 
-
         $question1 = $formData['Q1'];
         $question2 = $formData['Q2'];
         $question3 = $formData['Q3'];
@@ -94,7 +173,7 @@ class Pagescontroller extends Controller
 
 
 
-        $student->labs()->attach($lab,['question_1' => $formData['Q1'] ,'question_2' => $formData['Q2'] , 'question_3' =>  $formData['Q3'] ,'labcompleted'=>1]);
+        $student->labs()->attach($lab,['question_1' => $formData['Q1'] ,'question_2' => $formData['Q2'] , 'question_3' =>  $formData['Q3']]);
 
         return redirect('/');
 

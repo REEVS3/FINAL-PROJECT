@@ -16,7 +16,8 @@ Route::get('/charts','PagesController@charts');
 Route::post('/senddata','PagesController@senddata')->name('pages.Questions');
 Route::post('/sendquestions','PagesController@sendquestions')->name('pages.index');
 Route::get('/','PagesController@index');
-Route::get('/completed','PagesController@completedlabs');
+Route::get('/completed','PagesController@studentslabs');
+Route::get('/tables','PagesController@tables');
 Auth::routes();
 
 Route::get('/home', 'HomeController@index')->name('home');

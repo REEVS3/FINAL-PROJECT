@@ -11,4 +11,10 @@ class Student extends Model
     {
         return $this->belongsToMany(Lab::class,'lab_student');
     }
+
+    public function l_marks()
+    {
+        return $this->belongsToMany(Lab::class,'lab_student_mark');
+    }
+
 }

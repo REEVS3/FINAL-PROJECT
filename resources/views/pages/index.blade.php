@@ -2,6 +2,12 @@
 @section('title','Home')
 @section('content')
 
+@if (session('alert'))
+<div class="alert alert-danger">
+    {{session('alert')}}
+</div>     
+    
+@endif
 
 <h2 class="text-center">Checkpoints</h2>
 <form class="md-form px-2 d-flex justify-content-center" action="senddata" method="POST">

@@ -2,38 +2,30 @@
 @section('title','Home')
 @section('content')
 
-<tbody>
+<table class="table">
+    <thead>
+        <tr>
+            <th>Name</th>
+            @foreach ($Labs as $lab)
+        <th>{{$lab->lab_name}}</th>
+            @endforeach
+        </tr>
+    </thead>
+    <tbody>
+        @foreach ($Students as $i => $student)
+            
+            <tr>
+                <td>{{$student->first_name}}</td>
+            @foreach ($display[$i] as $state)
+                <td>{{$state}}</td>
+            @endforeach
+        </tr>
 
-@foreach ($Labs as $Lab )
-
-
-<h2>{{$Lab->lab_name}}</h2>
-
-
-
-
-
-
-
-@endforeach
-
-
-
-
-@foreach ($data as $key)
-
-<h4>Done</h4>
-
-@endforeach
-
+        @endforeach
+    </tbody>
+</table>
 
 
-
-
-
-
-
-</tbody>
 
 
 @endsection
